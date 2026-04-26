@@ -20,6 +20,8 @@ backend/database.db
 backend/__pycache__/
 backend/app/**/__pycache__/
 backend/.pytest_cache/
+__pycache__/
+*.pyc
 *.local
 
 # Wrangler / Cloudflare
