@@ -6,7 +6,10 @@ A full-stack SaaS-style web application for managing project-based finances, inc
 
 ```text
 ledgerly-expense-tracker/
-  frontend/
+  src/
+  package.json
+  vite.config.ts
+  vercel.json
   backend/
   README.md
 ```
@@ -142,7 +145,6 @@ http://127.0.0.1:8000
 ### 2) Frontend Setup
 
 ```bash
-cd frontend
 npm install
 npm run dev
 ```
@@ -155,7 +157,7 @@ http://127.0.0.1:8080
 
 ### 3) Frontend Environment
 
-Create [frontend/.env](frontend/.env) and set:
+Create `.env` in the repository root and set:
 
 ```bash
 VITE_API_BASE_URL=http://127.0.0.1:8000
@@ -193,6 +195,20 @@ gcloud run services describe ledgerly-api --region asia-southeast1 --format="val
 In Vercel project settings, set environment variable:
 
 - `VITE_API_BASE_URL=https://your-cloud-run-url`
+
+Use these settings for this repository:
+
+- Root Directory: repository root (`./`)
+- Framework Preset: Other
+- Build Command: `npm run build`
+- Output Directory: leave empty
+
+This frontend uses TanStack Start with Nitro runtime output, so it should be deployed as a server runtime app (not static-only Vite output).
+
+## Current Live Deployment
+
+- Backend (Cloud Run): `https://ledgerly-api-635388135964.asia-southeast1.run.app`
+- Frontend (Vercel): `https://ledgerly-expense-tracker-xpv1.vercel.app`
 
 ## Notes
 
