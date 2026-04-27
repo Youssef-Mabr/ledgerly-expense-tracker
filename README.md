@@ -72,7 +72,8 @@ Users can upload bank statement PDFs, extract expense transactions, assign them 
 
 ### Database
 
-- SQLite (local file-based database)
+- SQLite for local development
+- PostgreSQL (Cloud SQL) for production
 
 ### Other Tools
 
@@ -152,8 +153,49 @@ Frontend runs on:
 http://127.0.0.1:8080
 ```
 
+### 3) Frontend Environment
+
+Create [frontend/.env](frontend/.env) and set:
+
+```bash
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+For production, set `VITE_API_BASE_URL` to your deployed Cloud Run URL.
+
+## Production Deployment (Cloud Run + Cloud SQL + Vercel)
+
+### Backend on Cloud Run
+
+Deploy backend (from repository root):
+
+```bash
+gcloud run deploy ledgerly-api --source backend --region asia-southeast1 --platform managed --allow-unauthenticated
+```
+
+Set backend DB connection on Cloud Run service:
+
+```bash
+gcloud run services update ledgerly-api \
+  --region asia-southeast1 \
+  --set-env-vars "DATABASE_URL=postgresql+psycopg2://DB_USER:DB_PASSWORD@/DB_NAME?host=/cloudsql/PROJECT_ID:REGION:INSTANCE_NAME" \
+  --add-cloudsql-instances "PROJECT_ID:REGION:INSTANCE_NAME"
+```
+
+Get backend URL:
+
+```bash
+gcloud run services describe ledgerly-api --region asia-southeast1 --format="value(status.url)"
+```
+
+### Frontend on Vercel
+
+In Vercel project settings, set environment variable:
+
+- `VITE_API_BASE_URL=https://your-cloud-run-url`
+
 ## Notes
 
-- SQLite is used for simplicity (great for demo/testing).
+- Backend supports `DATABASE_URL`; if not set, it falls back to SQLite.
 - PDF parsing focuses on valid expense rows only.
 - Architecture prioritizes modular design and clear logic.
